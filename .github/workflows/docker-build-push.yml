@@ -1,4 +1,4 @@
-name: Build, Push & Deploy to K8s
+name: Build & Push to Docker Hub
 
 on:
   push:
@@ -31,18 +31,3 @@ jobs:
           tags: |
             ${{ env.DOCKERHUB_REPO }}:latest
             ${{ env.DOCKERHUB_REPO }}:sha-${{ github.sha }}
-
-          # 👇 เพิ่มส่วนนี้เข้ามา (deploy to k8s)
-      - name: Deploy to Kubernetes
-        uses: steebchen/kubectl@v2
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: set image deployment/web-app-deployment nginx=${{ env.DOCKERHUB_REPO }}:sha-${{ github.sha }}
-
-      - name: Verify deployment
-        uses: steebchen/kubectl@v2
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: rollout status deployment/hello-web-deployment --timeout=2m
