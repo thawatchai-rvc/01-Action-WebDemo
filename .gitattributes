@@ -1,4 +1,2 @@
-.git/
-.github/
-node_modules/
-.DS_Store
+# Auto detect text files and perform LF normalization
+* text=auto
